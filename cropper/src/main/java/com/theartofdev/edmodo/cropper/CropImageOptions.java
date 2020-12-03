@@ -174,6 +174,9 @@ public class CropImageOptions implements Parcelable {
   /** the Android Uri to save the cropped image to */
   public Uri outputUri;
 
+  /** the Android Uri to pass to ACTION_IMAGE_CAPTURE for returning the image */
+  public Uri captureImageOutputUri;
+
   /** the compression format to use when writing the image */
   public Bitmap.CompressFormat outputCompressFormat;
 
@@ -265,6 +268,7 @@ public class CropImageOptions implements Parcelable {
     activityMenuIconColor = 0;
 
     outputUri = Uri.EMPTY;
+    captureImageOutputUri = Uri.EMPTY;
     outputCompressFormat = Bitmap.CompressFormat.JPEG;
     outputCompressQuality = 90;
     outputRequestWidth = 0;
@@ -319,6 +323,7 @@ public class CropImageOptions implements Parcelable {
     activityTitle = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
     activityMenuIconColor = in.readInt();
     outputUri = in.readParcelable(Uri.class.getClassLoader());
+    captureImageOutputUri = in.readParcelable(Uri.class.getClassLoader());
     outputCompressFormat = Bitmap.CompressFormat.valueOf(in.readString());
     outputCompressQuality = in.readInt();
     outputRequestWidth = in.readInt();
@@ -371,6 +376,7 @@ public class CropImageOptions implements Parcelable {
     TextUtils.writeToParcel(activityTitle, dest, flags);
     dest.writeInt(activityMenuIconColor);
     dest.writeParcelable(outputUri, flags);
+    dest.writeParcelable(captureImageOutputUri, flags);
     dest.writeString(outputCompressFormat.name());
     dest.writeInt(outputCompressQuality);
     dest.writeInt(outputRequestWidth);

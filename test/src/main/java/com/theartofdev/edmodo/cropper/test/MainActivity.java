@@ -2,14 +2,15 @@ package com.theartofdev.edmodo.cropper.test;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import com.example.test.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +22,9 @@ public class MainActivity extends AppCompatActivity {
 
   /** Start pick image activity with chooser. */
   public void onSelectImageClick(View view) {
-    CropImage.activity(null).setGuidelines(CropImageView.Guidelines.ON).start(this);
+    CropImage.activity(null)
+        .setCaptureImageOutputUri(FileProvider.getUriForFile(this, "com.example.test.fileprovider", new File(getCacheDir(), "capture.jpg")))
+        .setGuidelines(CropImageView.Guidelines.ON).start(this);
   }
 
   @Override

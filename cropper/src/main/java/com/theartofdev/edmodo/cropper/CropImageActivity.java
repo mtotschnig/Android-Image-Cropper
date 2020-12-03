@@ -71,7 +71,7 @@ public class CropImageActivity extends AppCompatActivity
               new String[] {Manifest.permission.CAMERA},
               CropImage.CAMERA_CAPTURE_PERMISSIONS_REQUEST_CODE);
         } else {
-          CropImage.startPickImageActivity(this);
+          CropImage.startPickImageActivity(this, mOptions.captureImageOutputUri);
         }
       } else if (CropImage.isReadExternalStoragePermissionsRequired(this, mCropImageUri)) {
         // request permissions and handle the result in onRequestPermissionsResult()
@@ -198,7 +198,7 @@ public class CropImageActivity extends AppCompatActivity
       }
 
       if (resultCode == Activity.RESULT_OK) {
-        mCropImageUri = CropImage.getPickImageResultUri(this, data);
+        mCropImageUri = CropImage.getPickImageResultUri(this, data, mOptions.captureImageOutputUri);
 
         // For API >= 23 we need to check specifically that we have permissions to read external
         // storage.
@@ -233,7 +233,7 @@ public class CropImageActivity extends AppCompatActivity
     if (requestCode == CropImage.CAMERA_CAPTURE_PERMISSIONS_REQUEST_CODE) {
       // Irrespective of whether camera permission was given or not, we show the picker
       // The picker will not add the camera intent if permission is not available
-      CropImage.startPickImageActivity(this);
+      CropImage.startPickImageActivity(this, mOptions.captureImageOutputUri);
     }
   }
 
