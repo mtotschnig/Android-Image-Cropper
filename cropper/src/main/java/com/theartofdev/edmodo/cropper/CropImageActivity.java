@@ -71,7 +71,11 @@ public class CropImageActivity extends AppCompatActivity
               new String[] {Manifest.permission.CAMERA},
               CropImage.CAMERA_CAPTURE_PERMISSIONS_REQUEST_CODE);
         } else {
-          CropImage.startPickImageActivity(this, mOptions.captureImageOutputUri);
+          if (mOptions.cameraOnly) {
+            CropImage.startCameraActivity(this, mOptions.captureImageOutputUri);
+          } else {
+            CropImage.startPickImageActivity(this, mOptions.captureImageOutputUri);
+          }
         }
       } else if (CropImage.isReadExternalStoragePermissionsRequired(this, mCropImageUri)) {
         // request permissions and handle the result in onRequestPermissionsResult()

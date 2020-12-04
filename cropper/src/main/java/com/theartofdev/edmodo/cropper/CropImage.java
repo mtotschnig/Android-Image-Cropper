@@ -140,6 +140,16 @@ public final class CropImage {
   }
 
   /**
+   * Start default camera activity
+   * @param activity the activity to be used to start activity from
+   * @param captureImageOutputUri a content provider URI for the image capture to return its output
+   */
+  public static void startCameraActivity(@NonNull Activity activity, Uri captureImageOutputUri) {
+    activity.startActivityForResult(
+        getCameraIntent(activity, captureImageOutputUri), PICK_IMAGE_CHOOSER_REQUEST_CODE);
+  }
+
+  /**
    * Same as {@link #startPickImageActivity(Activity, Uri) startPickImageActivity} method but instead of
    * being called and returning to an Activity, this method can be called and return to a Fragment.
    *
@@ -942,6 +952,15 @@ public final class CropImage {
      */
     public ActivityBuilder setCropMenuCropButtonIcon(@DrawableRes int drawableResource) {
       mOptions.cropMenuCropButtonIcon = drawableResource;
+      return this;
+    }
+
+    /**
+     * if to bypass chooser and launch default camera directly.<br>
+     * <i>Default: false</i>
+     */
+    public ActivityBuilder setCameraOnly(boolean cameraOnly) {
+      mOptions.cameraOnly = cameraOnly;
       return this;
     }
   }
