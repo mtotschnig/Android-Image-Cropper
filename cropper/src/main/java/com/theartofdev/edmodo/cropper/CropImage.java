@@ -14,6 +14,7 @@ package com.theartofdev.edmodo.cropper;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -143,6 +144,7 @@ public final class CropImage {
    * Start default camera activity
    * @param activity the activity to be used to start activity from
    * @param captureImageOutputUri a content provider URI for the image capture to return its output
+   * @throws ActivityNotFoundException if no camera app installed on device
    */
   public static void startCameraActivity(@NonNull Activity activity, Uri captureImageOutputUri) {
     activity.startActivityForResult(

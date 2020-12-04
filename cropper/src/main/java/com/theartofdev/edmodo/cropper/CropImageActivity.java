@@ -15,6 +15,7 @@ package com.theartofdev.edmodo.cropper;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -72,7 +73,11 @@ public class CropImageActivity extends AppCompatActivity
               CropImage.CAMERA_CAPTURE_PERMISSIONS_REQUEST_CODE);
         } else {
           if (mOptions.cameraOnly) {
-            CropImage.startCameraActivity(this, mOptions.captureImageOutputUri);
+            try {
+              CropImage.startCameraActivity(this, mOptions.captureImageOutputUri);
+            } catch (ActivityNotFoundException e) {
+              setResult(null, e, 0);
+            }
           } else {
             CropImage.startPickImageActivity(this, mOptions.captureImageOutputUri);
           }
