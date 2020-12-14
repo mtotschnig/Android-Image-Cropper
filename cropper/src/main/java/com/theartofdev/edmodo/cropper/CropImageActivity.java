@@ -61,10 +61,11 @@ public class CropImageActivity extends AppCompatActivity
     mCropImageView = findViewById(R.id.cropImageView);
 
     Bundle bundle = getIntent().getBundleExtra(CropImage.CROP_IMAGE_EXTRA_BUNDLE);
-    mCropImageUri = bundle.getParcelable(CropImage.CROP_IMAGE_EXTRA_SOURCE);
+
     mOptions = bundle.getParcelable(CropImage.CROP_IMAGE_EXTRA_OPTIONS);
 
     if (savedInstanceState == null) {
+      mCropImageUri = bundle.getParcelable(CropImage.CROP_IMAGE_EXTRA_SOURCE);
       if (mCropImageUri == null || mCropImageUri.equals(Uri.EMPTY)) {
         if (CropImage.isExplicitCameraPermissionRequired(this)) {
           // request permissions and handle the result in onRequestPermissionsResult()
@@ -89,6 +90,11 @@ public class CropImageActivity extends AppCompatActivity
             CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
       } else {
         // no permissions required or already grunted, can start crop image activity
+        mCropImageView.setImageUriAsync(mCropImageUri);
+      }
+    } else {
+      mCropImageUri = savedInstanceState.getParcelable(CropImage.CROP_IMAGE_EXTRA_SOURCE);
+      if (mCropImageUri != null && !mCropImageUri.equals(Uri.EMPTY)) {
         mCropImageView.setImageUriAsync(mCropImageUri);
       }
     }
@@ -116,6 +122,15 @@ public class CropImageActivity extends AppCompatActivity
     super.onStop();
     mCropImageView.setOnSetImageUriCompleteListener(null);
     mCropImageView.setOnCropImageCompleteListener(null);
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    if (mCropImageUri != null){
+      outState.putParcelable(CropImage.CROP_IMAGE_EXTRA_SOURCE, mCropImageUri);
+    }
+
+    super.onSaveInstanceState(outState);
   }
 
   @Override
