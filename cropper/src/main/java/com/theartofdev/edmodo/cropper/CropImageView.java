@@ -1009,7 +1009,7 @@ public class CropImageView extends FrameLayout {
    * @param uri the URI to load the image from
    */
   public void setImageUriAsync(Uri uri) {
-    if (uri != null) {
+    if (uri != null && !uri.equals(mLoadedImageUri)) {
       BitmapLoadingWorkerTask currentTask =
           mBitmapLoadingWorkerTask != null ? mBitmapLoadingWorkerTask.get() : null;
       if (currentTask != null) {

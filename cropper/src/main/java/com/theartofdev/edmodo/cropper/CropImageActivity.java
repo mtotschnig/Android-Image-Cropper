@@ -92,11 +92,6 @@ public class CropImageActivity extends AppCompatActivity
         // no permissions required or already grunted, can start crop image activity
         mCropImageView.setImageUriAsync(mCropImageUri);
       }
-    } else {
-      mCropImageUri = savedInstanceState.getParcelable(CropImage.CROP_IMAGE_EXTRA_SOURCE);
-      if (mCropImageUri != null && !mCropImageUri.equals(Uri.EMPTY)) {
-        mCropImageView.setImageUriAsync(mCropImageUri);
-      }
     }
 
     ActionBar actionBar = getSupportActionBar();
@@ -107,6 +102,15 @@ public class CropImageActivity extends AppCompatActivity
               : getResources().getString(R.string.crop_image_activity_title);
       actionBar.setTitle(title);
       actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+  }
+
+  @Override
+  protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    mCropImageUri = savedInstanceState.getParcelable(CropImage.CROP_IMAGE_EXTRA_SOURCE);
+    if (mCropImageUri != null && !mCropImageUri.equals(Uri.EMPTY)) {
+      mCropImageView.setImageUriAsync(mCropImageUri);
     }
   }
 
