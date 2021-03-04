@@ -1,4 +1,12 @@
-<manifest
-    package="com.theartofdev.edmodo.cropper">
-
+<manifest package="com.theartofdev.edmodo.cropper"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<queries>
+		<intent>
+			<action android:name="android.media.action.IMAGE_CAPTURE" />
+		</intent>
+		<intent>
+			<action android:name="android.intent.action.GET_CONTENT" />
+			<data android:mimeType="image/jpeg" />
+		</intent>
+	</queries>
 </manifest>

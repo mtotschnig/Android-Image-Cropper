@@ -48,19 +48,19 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 /**
- * Helper to simplify crop image work like starting pick-image acitvity and handling camera/gallery
+ * Helper to simplify crop image work like starting pick-image activity and handling camera/gallery
  * intents.<br>
  * The goal of the helper is to simplify the starting and most-common usage of image cropping and
- * not all porpose all possible scenario one-to-rule-them-all code base. So feel free to use it as
+ * not all purpose all possible scenario one-to-rule-them-all code base. So feel free to use it as
  * is and as a wiki to make your own.<br>
  * Added value you get out-of-the-box is some edge case handling that you may miss otherwise, like
  * the stupid-ass Android camera result URI that may differ from version to version and from device
  * to device.
  */
-@SuppressWarnings("WeakerAccess, unused")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public final class CropImage {
 
-  // region: Fields and Consts
+  // region: Fields and Constants
 
   /** The key used to pass crop image source URI to {@link CropImageActivity}. */
   public static final String CROP_IMAGE_EXTRA_SOURCE = "CROP_IMAGE_EXTRA_SOURCE";
@@ -128,8 +128,8 @@ public final class CropImage {
 
   /**
    * Start an activity to get image for cropping using chooser intent that will have all the
-   * available applications for the device like camera (MyCamera), galery (Photos), store apps
-   * (Dropbox), etc.<br>
+   * available applications for the device like camera (MyCamera), gallery (Photos), store apps
+   * (DropBox), etc.<br>
    * Use "pick_image_intent_chooser_title" string resource to override pick chooser title.
    *
    * @param activity the activity to be used to start activity from
@@ -226,7 +226,7 @@ public final class CropImage {
 
     // Add all other intents
     chooserIntent.putExtra(
-        Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
+        Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[0]));
 
     return chooserIntent;
   }
@@ -271,11 +271,14 @@ public final class CropImage {
   public static List<Intent> getGalleryIntents(
       @NonNull PackageManager packageManager, String action, boolean includeDocuments) {
     List<Intent> intents = new ArrayList<>();
-    Intent galleryIntent =
-        action == Intent.ACTION_GET_CONTENT
-            ? new Intent(action)
-            : new Intent(action, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-    galleryIntent.setType("image/*");
+    final Intent galleryIntent = new Intent(action);
+    final Uri data;
+    if (action.equals(Intent.ACTION_GET_CONTENT)) {
+      data = null;
+    } else {
+      data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+    }
+    galleryIntent.setDataAndType(data, "image/*");
     List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
     for (ResolveInfo res : listGallery) {
       Intent intent = new Intent(galleryIntent);
@@ -300,8 +303,8 @@ public final class CropImage {
   }
 
   /**
-   * Check if explicetly requesting camera permission is required.<br>
-   * It is required in Android Marshmellow and above if "CAMERA" permission is requested in the
+   * Check if explicitly requesting camera permission is required.<br>
+   * It is required in Android Marshmallow and above if "CAMERA" permission is requested in the
    * manifest.<br>
    * See <a
    * href="http://stackoverflow.com/questions/32789027/android-m-camera-intent-permission-bug">StackOverflow
@@ -326,15 +329,15 @@ public final class CropImage {
     try {
       PackageInfo packageInfo =
           context.getPackageManager().getPackageInfo(packageName, PackageManager.GET_PERMISSIONS);
-      final String[] declaredPermisisons = packageInfo.requestedPermissions;
-      if (declaredPermisisons != null && declaredPermisisons.length > 0) {
-        for (String p : declaredPermisisons) {
+      final String[] declaredPermissions = packageInfo.requestedPermissions;
+      if (declaredPermissions != null && declaredPermissions.length > 0) {
+        for (String p : declaredPermissions) {
           if (p.equalsIgnoreCase(permissionName)) {
             return true;
           }
         }
       }
-    } catch (PackageManager.NameNotFoundException e) {
+    } catch (PackageManager.NameNotFoundException ignored) {
     }
     return false;
   }
@@ -360,7 +363,6 @@ public final class CropImage {
    *  @param context used to access Android APIs, like content resolve, it is your
    *     activity/fragment/widget.
    * @param data the returned data of the activity result
-   * @param captureImageOutputUri
    */
   public static Uri getPickImageResultUri(@NonNull Context context, @Nullable Intent data, Uri captureImageOutputUri) {
     boolean isCamera = true;
@@ -816,7 +818,7 @@ public final class CropImage {
     }
 
     /**
-     * the compression format to use when writting the image.<br>
+     * the compression format to use when writing the image.<br>
      * <i>Default: JPEG</i>
      */
     public ActivityBuilder setOutputCompressFormat(Bitmap.CompressFormat outputCompressFormat) {
@@ -825,7 +827,7 @@ public final class CropImage {
     }
 
     /**
-     * the quility (if applicable) to use when writting the image (0 - 100).<br>
+     * the quality (if applicable) to use when writing the image (0 - 100).<br>
      * <i>Default: 90</i>
      */
     public ActivityBuilder setOutputCompressQuality(int outputCompressQuality) {
@@ -913,7 +915,7 @@ public final class CropImage {
     }
 
     /**
-     * The amount of degreees to rotate clockwise or counter-clockwise (0-360).<br>
+     * The amount of degrees to rotate clockwise or counter-clockwise (0-360).<br>
      * <i>Default: 90</i>
      */
     public ActivityBuilder setRotationDegrees(int rotationDegrees) {
