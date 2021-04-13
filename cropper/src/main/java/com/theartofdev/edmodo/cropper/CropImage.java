@@ -15,6 +15,7 @@ package com.theartofdev.edmodo.cropper;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -35,17 +36,15 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Helper to simplify crop image work like starting pick-image activity and handling camera/gallery
@@ -243,8 +242,17 @@ public final class CropImage {
    */
   public static Intent getCameraIntent(@NonNull Context context, Uri outputFileUri) {
     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+    addOutputWithPermission(context, intent, outputFileUri);
     return intent;
+  }
+
+  private static void addOutputWithPermission(@NonNull Context context, Intent intent, Uri outputUri) {
+    intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      ClipData clip= ClipData.newUri(context.getContentResolver(), "A photo", outputUri);
+      intent.setClipData(clip);
+    }
+    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
   }
 
   /** Get all Camera intents for capturing image using device camera apps. */
@@ -257,7 +265,7 @@ public final class CropImage {
       Intent intent = new Intent(captureIntent);
       intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
       intent.setPackage(res.activityInfo.packageName);
-      intent.putExtra(MediaStore.EXTRA_OUTPUT, captureImageOutputUri);
+      addOutputWithPermission(context, intent, captureImageOutputUri);
       allIntents.add(intent);
     }
 
