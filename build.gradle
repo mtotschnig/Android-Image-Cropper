@@ -1,17 +1,17 @@
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.3'
+        classpath 'com.android.tools.build:gradle:7.4.0-rc01'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
 
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral()
         maven {
             url "https://maven.google.com"
         }
@@ -20,7 +20,7 @@ allprojects {
 
 ext {
     compileSdkVersion = 30
-    androidXLibraryVersion = '1.2.0'
+    androidXLibraryVersion = '1.5,1'
 
     PUBLISH_GROUP_ID = 'com.theartofdev.edmodo'
     PUBLISH_ARTIFACT_ID = 'android-image-cropper'

@@ -5,17 +5,12 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion rootProject.compileSdkVersion
-        versionCode 1
-        versionName PUBLISH_VERSION
     }
+    namespace 'com.theartofdev.edmodo.cropper'
 }
 
 
 dependencies {
     api "androidx.appcompat:appcompat:$androidXLibraryVersion"
-    implementation "androidx.exifinterface:exifinterface:1.3.1"
+    implementation "androidx.exifinterface:exifinterface:1.3.5"
 }
-
-apply plugin: 'com.github.dcendents.android-maven'
-
-group = "com.github.mtotschnig.Android-Image-Cropper"
