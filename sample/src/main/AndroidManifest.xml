@@ -11,7 +11,8 @@
         android:theme="@style/Theme.AppCompat">
         <activity
             android:name="com.theartofdev.edmodo.cropper.sample.MainActivity"
-            android:label="@string/app_title">
+            android:label="@string/app_title"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
