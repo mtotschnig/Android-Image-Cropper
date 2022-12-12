@@ -35,6 +35,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
+import timber.log.Timber;
+
 /**
  * Built-in activity for image cropping.<br>
  * Use {@link CropImage#activity(Uri)} to create a builder to start this activity.
@@ -163,7 +165,7 @@ public class CropImageActivity extends AppCompatActivity
         menu.findItem(R.id.crop_image_menu_crop).setIcon(cropIcon);
       }
     } catch (Exception e) {
-      Log.w("AIC", "Failed to read menu crop drawable", e);
+      Timber.tag("AIC").w(e, "Failed to read menu crop drawable");
     }
 
     if (mOptions.activityMenuIconColor != 0) {
@@ -369,7 +371,7 @@ public class CropImageActivity extends AppCompatActivity
           menuItemIcon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
           menuItem.setIcon(menuItemIcon);
         } catch (Exception e) {
-          Log.w("AIC", "Failed to update menu item color", e);
+          Timber.tag("AIC").w(e, "Failed to update menu item color");
         }
       }
     }

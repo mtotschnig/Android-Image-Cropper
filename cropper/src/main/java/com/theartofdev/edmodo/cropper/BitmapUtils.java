@@ -39,6 +39,8 @@ import javax.microedition.khronos.egl.EGLDisplay;
 
 import androidx.exifinterface.media.ExifInterface;
 
+import timber.log.Timber;
+
 /** Utility class that deals with operations with an ImageView. */
 final class BitmapUtils {
 
@@ -388,7 +390,7 @@ final class BitmapUtils {
       }
       return uri;
     } catch (Exception e) {
-      Log.w("AIC", "Failed to write bitmap to temp file for image-cropper save instance state", e);
+      Timber.tag("AIC").w(e,"Failed to write bitmap to temp file for image-cropper save instance state");
       return null;
     }
   }
@@ -441,7 +443,7 @@ final class BitmapUtils {
         }
       }
     } catch (Exception e) {
-      Log.w("AIC", "Failed to resize cropped image, return bitmap before resize", e);
+      Timber.tag("AIC").w(e, "Failed to resize cropped image, return bitmap before resize");
     }
     return bitmap;
   }

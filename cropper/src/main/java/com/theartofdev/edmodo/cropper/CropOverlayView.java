@@ -29,6 +29,8 @@ import android.view.View;
 
 import java.util.Arrays;
 
+import timber.log.Timber;
+
 /** A custom View representing the crop window and the shaded background outside the crop window. */
 public class CropOverlayView extends View {
 
@@ -983,7 +985,7 @@ public class CropOverlayView extends View {
         mCropWindowChangeListener.onCropWindowChanged(inProgress);
       }
     } catch (Exception e) {
-      Log.e("AIC", "Exception in crop window changed", e);
+      Timber.tag("AIC").e(e, "Exception in crop window changed");
     }
   }
   // endregion
