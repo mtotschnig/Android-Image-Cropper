@@ -77,12 +77,12 @@ public class CropImageActivity extends AppCompatActivity
         } else {
           if (mOptions.cameraOnly) {
             try {
-              CropImage.startCameraActivity(this, mOptions.captureImageOutputUri);
+              CropImage.startCameraActivity(this, mOptions.captureImageOutputUri, mOptions.cameraPackage);
             } catch (ActivityNotFoundException e) {
               setResult(null, e, 0);
             }
           } else {
-            CropImage.startPickImageActivity(this, mOptions.captureImageOutputUri);
+            CropImage.startPickImageActivity(this, mOptions.captureImageOutputUri, mOptions.cameraPackage);
           }
         }
       } else if (CropImage.isReadExternalStoragePermissionsRequired(this, mCropImageUri)) {
@@ -263,7 +263,7 @@ public class CropImageActivity extends AppCompatActivity
     if (requestCode == CropImage.CAMERA_CAPTURE_PERMISSIONS_REQUEST_CODE) {
       // Irrespective of whether camera permission was given or not, we show the picker
       // The picker will not add the camera intent if permission is not available
-      CropImage.startPickImageActivity(this, mOptions.captureImageOutputUri);
+      CropImage.startPickImageActivity(this, mOptions.captureImageOutputUri, mOptions.cameraPackage);
     }
   }
 

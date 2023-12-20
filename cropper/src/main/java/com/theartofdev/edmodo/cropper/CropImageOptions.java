@@ -228,6 +228,9 @@ public class CropImageOptions implements Parcelable {
   /** bypass chooser and launch default camera directly */
   public boolean cameraOnly;
 
+  /** bypass Android 11 restriction where only default camera app responds to ACTION_IMAGE_CAPTURE */
+  public String cameraPackage;
+
   /** Init options with defaults. */
   public CropImageOptions() {
 
@@ -289,6 +292,7 @@ public class CropImageOptions implements Parcelable {
     cropMenuCropButtonTitle = null;
     cropMenuCropButtonIcon = 0;
     cameraOnly = false;
+    cameraPackage = null;
   }
 
   /** Create object from parcel. */
@@ -343,6 +347,7 @@ public class CropImageOptions implements Parcelable {
     cropMenuCropButtonTitle = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
     cropMenuCropButtonIcon = in.readInt();
     cameraOnly = in.readByte() != 0;
+    cameraPackage = in.readString();
   }
 
   @Override
@@ -397,6 +402,7 @@ public class CropImageOptions implements Parcelable {
     TextUtils.writeToParcel(cropMenuCropButtonTitle, dest, flags);
     dest.writeInt(cropMenuCropButtonIcon);
     dest.writeByte((byte) (cameraOnly ? 1 : 0));
+    dest.writeString(cameraPackage);
   }
 
   @Override

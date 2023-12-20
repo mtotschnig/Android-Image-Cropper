@@ -134,33 +134,38 @@ public final class CropImage {
    * @param activity the activity to be used to start activity from
    * @param captureImageOutputUri a content provider URI for the image capture to return its output
    */
-  public static void startPickImageActivity(@NonNull Activity activity, Uri captureImageOutputUri) {
+  public static void startPickImageActivity(@NonNull Activity activity, Uri captureImageOutputUri, String cameraPackage) {
     activity.startActivityForResult(
-        getPickImageChooserIntent(activity, captureImageOutputUri), PICK_IMAGE_CHOOSER_REQUEST_CODE);
+        getPickImageChooserIntent(activity, captureImageOutputUri, cameraPackage), PICK_IMAGE_CHOOSER_REQUEST_CODE);
   }
 
   /**
    * Start default camera activity
-   * @param activity the activity to be used to start activity from
+   *
+   * @param activity              the activity to be used to start activity from
    * @param captureImageOutputUri a content provider URI for the image capture to return its output
+   * @param cameraPackage
    * @throws ActivityNotFoundException if no camera app installed on device
    */
-  public static void startCameraActivity(@NonNull Activity activity, Uri captureImageOutputUri) {
+  public static void startCameraActivity(@NonNull Activity activity, Uri captureImageOutputUri, String cameraPackage) {
     activity.startActivityForResult(
-        getCameraIntent(activity, captureImageOutputUri), PICK_IMAGE_CHOOSER_REQUEST_CODE);
+        getCameraIntent(activity, captureImageOutputUri, cameraPackage), PICK_IMAGE_CHOOSER_REQUEST_CODE);
   }
 
   /**
-   * Same as {@link #startPickImageActivity(Activity, Uri) startPickImageActivity} method but instead of
+   * Same as {@link #startPickImageActivity(Activity, Uri, String) startPickImageActivity} method but instead of
    * being called and returning to an Activity, this method can be called and return to a Fragment.
    *
    * @param context The Fragments context. Use getContext()
    * @param fragment The calling Fragment to start and return the image to
    * @param captureImageOutputUri a content provider URI for the image capture to return its output
    */
-  public static void startPickImageActivity(@NonNull Context context, @NonNull Fragment fragment, Uri captureImageOutputUri) {
+  public static void startPickImageActivity(@NonNull Context context,
+                                            @NonNull Fragment fragment,
+                                            Uri captureImageOutputUri,
+                                            String cameraPackage) {
     fragment.startActivityForResult(
-        getPickImageChooserIntent(context, captureImageOutputUri), PICK_IMAGE_CHOOSER_REQUEST_CODE);
+        getPickImageChooserIntent(context, captureImageOutputUri, cameraPackage), PICK_IMAGE_CHOOSER_REQUEST_CODE);
   }
 
   /**
@@ -173,9 +178,9 @@ public final class CropImage {
    *     activity/fragment/widget.
    * @param captureImageOutputUri a content provider URI for the image capture to return its output
    */
-  public static Intent getPickImageChooserIntent(@NonNull Context context, Uri captureImageOutputUri) {
+  public static Intent getPickImageChooserIntent(@NonNull Context context, Uri captureImageOutputUri, String cameraPackage) {
     return getPickImageChooserIntent(
-        context, context.getString(R.string.pick_image_intent_chooser_title), false, true, captureImageOutputUri);
+        context, context.getString(R.string.pick_image_intent_chooser_title), false, true, captureImageOutputUri, cameraPackage);
   }
 
   /**
@@ -194,14 +199,19 @@ public final class CropImage {
       CharSequence title,
       boolean includeDocuments,
       boolean includeCamera,
-      Uri captureImageOutputUri) {
+      Uri captureImageOutputUri,
+      String cameraPackage) {
 
     List<Intent> allIntents = new ArrayList<>();
     PackageManager packageManager = context.getPackageManager();
 
     // collect all camera intents if Camera permission is available
     if (!isExplicitCameraPermissionRequired(context) && includeCamera) {
-      allIntents.addAll(getCameraIntents(context, packageManager, captureImageOutputUri));
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R && cameraPackage == null) {
+        allIntents.addAll(getCameraIntents(context, packageManager, captureImageOutputUri));
+      } else {
+        allIntents.add(getCameraIntent(context, captureImageOutputUri, cameraPackage));
+      }
     }
 
     List<Intent> galleryIntents =
@@ -236,12 +246,16 @@ public final class CropImage {
    * you will be able to get the pictureUri using {@link #getPickImageResultUri(Context, Intent, Uri)}.
    * Otherwise, it is just you use the Uri passed to this method.
    *
-   * @param context used to access Android APIs, like content resolve, it is your
-   *     activity/fragment/widget.
+   * @param context       used to access Android APIs, like content resolve, it is your
+   *                      activity/fragment/widget.
    * @param outputFileUri the Uri where the picture will be placed.
+   * @param cameraPackage if not null the intent will target the app with this package name
    */
-  public static Intent getCameraIntent(@NonNull Context context, Uri outputFileUri) {
+  public static Intent getCameraIntent(@NonNull Context context, Uri outputFileUri, String cameraPackage) {
     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    if (cameraPackage != null) {
+      intent.setPackage(cameraPackage);
+    }
     addOutputWithPermission(context, intent, outputFileUri);
     return intent;
   }
@@ -366,7 +380,7 @@ public final class CropImage {
   }
 
   /**
-   * Get the URI of the selected image from {@link #getPickImageChooserIntent(Context, Uri)}.<br>
+   * Get the URI of the selected image from {@link #getPickImageChooserIntent(Context, Uri, String)}.<br>
    * Will return the correct URI for camera and gallery image.
    *  @param context used to access Android APIs, like content resolve, it is your
    *     activity/fragment/widget.
@@ -973,6 +987,11 @@ public final class CropImage {
      */
     public ActivityBuilder setCameraOnly(boolean cameraOnly) {
       mOptions.cameraOnly = cameraOnly;
+      return this;
+    }
+
+    public ActivityBuilder setCameraPackage(String cameraPackage) {
+      mOptions.cameraPackage = cameraPackage;
       return this;
     }
   }
