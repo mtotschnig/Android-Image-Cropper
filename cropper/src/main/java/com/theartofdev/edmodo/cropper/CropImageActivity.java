@@ -75,14 +75,14 @@ public class CropImageActivity extends AppCompatActivity
               new String[] {Manifest.permission.CAMERA},
               CropImage.CAMERA_CAPTURE_PERMISSIONS_REQUEST_CODE);
         } else {
-          if (mOptions.cameraOnly) {
-            try {
+          try {
+            if (mOptions.cameraOnly) {
               CropImage.startCameraActivity(this, mOptions.captureImageOutputUri, mOptions.cameraPackage);
-            } catch (ActivityNotFoundException e) {
-              setResult(null, e, 0);
+            } else {
+              CropImage.startPickImageActivity(this, mOptions.captureImageOutputUri, mOptions.cameraPackage);
             }
-          } else {
-            CropImage.startPickImageActivity(this, mOptions.captureImageOutputUri, mOptions.cameraPackage);
+          } catch (Exception e) {
+            setResult(null, e, 0);
           }
         }
       } else if (CropImage.isReadExternalStoragePermissionsRequired(this, mCropImageUri)) {
