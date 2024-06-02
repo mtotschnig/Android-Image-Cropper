@@ -6,9 +6,14 @@ android {
         minSdkVersion 14
         targetSdkVersion rootProject.compileSdkVersion
     }
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
     namespace 'com.theartofdev.edmodo.cropper'
 }
-
 
 dependencies {
     api "androidx.appcompat:appcompat:$androidXLibraryVersion"
